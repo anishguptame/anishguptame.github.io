@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Comparable Companies Dashboard | Anish Gupta</title>
+  <meta name="description" content="Indian consumer and retail relative valuation comps benchmark by Anish Gupta.">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .comps-wrap { width: min(100% - 48px, 1140px); margin-inline: auto; padding: 48px 0 100px; }
+    .back-nav { display: inline-flex; align-items: center; gap: 8px; font-size: 14.5px; font-weight: 600; color: var(--navy-800); margin-bottom: 32px; text-decoration: none; border-bottom: 1px solid var(--blue-500); padding-bottom: 2px; }
+    .back-nav:hover { color: var(--blue-500); }
+
+    .stat-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin: 32px 0 36px; }
+    .stat-card { background: #fff; border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 20px; box-shadow: var(--shadow-sm); }
+    .stat-card span { display: block; font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-mute); margin-bottom: 6px; }
+    .stat-card strong { font-family: var(--font-serif); font-size: 32px; color: var(--navy-800); font-weight: 500; }
+    
+    .table-container { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); overflow-x: auto; box-shadow: var(--shadow-sm); }
+    .peer-table { width: 100%; border-collapse: collapse; font-size: 14.5px; }
+    .peer-table th, .peer-table td { padding: 14px 18px; text-align: right; border-bottom: 1px solid var(--line); white-space: nowrap; }
+    .peer-table th:first-child, .peer-table td:first-child,
+    .peer-table th:nth-child(2), .peer-table td:nth-child(2) { text-align: left; }
+    .peer-table th { background: var(--tint); color: var(--navy-800); font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer; user-select: none; }
+    .peer-table th:hover { background: #E8EEF5; }
+    .peer-table tr:hover td { background: #FAFCFE; }
+    .peer-table tr.highlight td { background: #F1F6FB; font-weight: 600; }
+    
+    .commentary { margin-top: 48px; display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+    .comm-card { background: #fff; border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 26px; }
+    .comm-card h3 { font-family: var(--font-serif); font-size: 20px; color: var(--navy-800); margin-bottom: 10px; }
+    .comm-card p { font-size: 15px; color: var(--ink-soft); line-height: 1.65; margin: 0; }
+    
+    @media (max-width: 800px) {
+      .commentary { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="nav" id="nav">
+    <div class="container nav__inner">
+      <a href="index.html" class="nav__brand">
+        <span class="nav__mark">AG</span>
+        <span class="nav__name">Anish Gupta</span>
+      </a>
+      <nav class="nav__links">
+        <a href="index.html#research">All Projects</a>
+        <a href="titan-report.html">Titan Report</a>
+        <a href="dcf-tool.html">DCF Tool</a>
+        <a href="https://www.linkedin.com/in/anish-gupta-a81478354/" target="_blank" rel="noopener" class="btn btn--small btn--dark">LinkedIn</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="comps-wrap">
+    <a href="index.html#research" class="back-nav">&larr; Back to Research Portfolio</a>
+
+    <p class="eyebrow">Project 04 &middot; Relative Valuation</p>
+    <h1 class="section__title" style="margin-bottom: 12px;">Indian Retail &amp; Consumer Comps Dashboard</h1>
+    <p style="font-size: 18px; color: var(--ink-soft); max-width: 760px; line-height: 1.6;">
+      Peer multiple benchmarking across India's leading organized retail and consumption proxies. Click any table column header to sort.
+    </p>
+
+    <!-- Top Summary Cards -->
+    <div class="stat-row">
+      <div class="stat-card">
+        <span>Median P/E (TTM)</span>
+        <strong>84.2x</strong>
+      </div>
+      <div class="stat-card">
+        <span>Median EV/EBITDA</span>
+        <strong>54.2x</strong>
+      </div>
+      <div class="stat-card">
+        <span>Top ROCE Performer</span>
+        <strong style="color: var(--green);">Trent (31.2%)</strong>
+      </div>
+      <div class="stat-card">
+        <span>Cleanest Balance Sheet</span>
+        <strong style="color: var(--navy-800);">DMart (0.05x D/E)</strong>
+      </div>
+    </div>
+
+    <!-- Comps Table -->
+    <div class="table-container">
+      <table class="peer-table" id="peer-table">
+        <thead>
+          <tr>
+            <th data-type="str">Company &#x21C5;</th>
+            <th data-type="str">Ticker &#x21C5;</th>
+            <th data-type="num">Mkt Cap (₹ Cr) &#x21C5;</th>
+            <th data-type="num">P/E (TTM) &#x21C5;</th>
+            <th data-type="num">EV / EBITDA &#x21C5;</th>
+            <th data-type="num">ROCE (%) &#x21C5;</th>
+            <th data-type="num">3Y Sales CAGR (%) &#x21C5;</th>
+            <th data-type="num">Debt / Equity &#x21C5;</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="highlight">
+            <td><strong>Titan Company</strong></td>
+            <td>TITAN</td>
+            <td>307200</td>
+            <td>84.2</td>
+            <td>54.2</td>
+            <td>28.4</td>
+            <td>24.5</td>
+            <td>0.68</td>
+          </tr>
+          <tr>
+            <td><strong>Trent Limited</strong></td>
+            <td>TRENT</td>
+            <td>257400</td>
+            <td>148.0</td>
+            <td>92.0</td>
+            <td>31.2</td>
+            <td>42.8</td>
+            <td>0.42</td>
+          </tr>
+          <tr>
+            <td><strong>Avenue Supermarts (DMart)</strong></td>
+            <td>DMART</td>
+            <td>286900</td>
+            <td>102.5</td>
+            <td>68.5</td>
+            <td>18.5</td>
+            <td>28.0</td>
+            <td>0.05</td>
+          </tr>
+          <tr>
+            <td><strong>Kalyan Jewellers</strong></td>
+            <td>KALYANKJIL</td>
+            <td>70100</td>
+            <td>68.4</td>
+            <td>42.1</td>
+            <td>19.2</td>
+            <td>31.4</td>
+            <td>0.85</td>
+          </tr>
+          <tr>
+            <td><strong>Tata Consumer Products</strong></td>
+            <td>TATACONSUM</td>
+            <td>102800</td>
+            <td>74.2</td>
+            <td>38.4</td>
+            <td>9.8</td>
+            <td>12.1</td>
+            <td>0.18</td>
+          </tr>
+          <tr>
+            <td><strong>Bikaji Foods</strong></td>
+            <td>BIKAJI</td>
+            <td>21400</td>
+            <td>86.5</td>
+            <td>48.2</td>
+            <td>21.5</td>
+            <td>22.4</td>
+            <td>0.12</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Qualitative Commentary -->
+    <div class="commentary">
+      <div class="comm-card">
+        <h3>Why Multiple Divergence Exists in Indian Retail</h3>
+        <p>
+          High optical P/E multiples (such as Trent at ~148x vs Kalyan at ~68x) are driven by market expectations of runway length and reinvestment economics. Trent commands a premium due to Zudio's exceptional unit economics and ~40%+ revenue compounding, whereas regional jewellers trade at a discount due to higher working-capital debt requirements.
+        </p>
+      </div>
+
+      <div class="comm-card">
+        <h3>Titan vs. Direct Jewellery Peers</h3>
+        <p>
+          Titan (Tanishq) commands a premium valuation over Kalyan Jewellers because of its franchised store model, superior customer trust moat, and gold-on-lease financing structure that drives an industry-leading 28.4% ROCE without speculative gold inventory exposure.
+        </p>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer__inner">
+      <span>&copy; 2026 Anish Gupta &middot; Christ University</span>
+      <span class="footer__note">Academic research &middot; Not investment advice.</span>
+    </div>
+  </footer>
+
+  <script>
+    // Table sorting script
+    const table = document.getElementById('peer-table');
+    const headers = table.querySelectorAll('th');
+    let sortDirection = {};
+
+    headers.forEach((th, idx) => {
+      th.addEventListener('click', () => {
+        const type = th.getAttribute('data-type');
+        const rows = Array.from(table.querySelectorAll('tbody tr'));
+        const dir = sortDirection[idx] === 'asc' ? 'desc' : 'asc';
+        sortDirection = {};
+        sortDirection[idx] = dir;
+
+        rows.sort((a, b) => {
+          let aVal = a.children[idx].innerText.replace(/[₹,x%]/g, '').trim();
+          let bVal = b.children[idx].innerText.replace(/[₹,x%]/g, '').trim();
+          
+          if (type === 'num') {
+            aVal = parseFloat(aVal) || 0;
+            bVal = parseFloat(bVal) || 0;
+            return dir === 'asc' ? aVal - bVal : bVal - aVal;
+          } else {
+            return dir === 'asc' ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
+          }
+        });
+
+        const tbody = table.querySelector('tbody');
+        tbody.innerHTML = '';
+        rows.forEach(r => tbody.appendChild(r));
+      });
+    });
+  </script>
+</body>
+</html>

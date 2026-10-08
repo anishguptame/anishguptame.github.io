@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive DCF Valuation Tool | Anish Gupta</title>
+  <meta name="description" content="Interactive Discounted Cash Flow (DCF) model and sensitivity engine for Indian equities by Anish Gupta.">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .tool-wrap { width: min(100% - 48px, 1100px); margin-inline: auto; padding: 48px 0 100px; }
+    .back-nav { display: inline-flex; align-items: center; gap: 8px; font-size: 14.5px; font-weight: 600; color: var(--navy-800); margin-bottom: 32px; text-decoration: none; border-bottom: 1px solid var(--blue-500); padding-bottom: 2px; }
+    .back-nav:hover { color: var(--blue-500); }
+
+    .tool-grid { display: grid; grid-template-columns: 1fr 1.15fr; gap: 40px; margin-top: 36px; }
+    
+    .panel { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 32px; box-shadow: var(--shadow-sm); }
+    .panel-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding-bottom: 14px; border-bottom: 1px solid var(--line); }
+    .panel-head h2 { font-family: var(--font-serif); font-size: 22px; font-weight: 500; color: var(--navy-800); margin: 0; }
+    
+    .slider-box { margin-bottom: 24px; }
+    .slider-info { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; font-size: 14.5px; font-weight: 600; color: var(--navy-800); }
+    .slider-val { font-size: 16px; font-weight: 700; color: var(--navy-700); background: var(--blue-100); padding: 2px 8px; border-radius: 4px; }
+    
+    input[type=range] { width: 100%; height: 6px; background: var(--tint); border: 1px solid var(--line); border-radius: 999px; outline: none; -webkit-appearance: none; }
+    input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%; background: var(--navy-800); cursor: pointer; border: 2px solid #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
+    
+    .slider-hints { display: flex; justify-content: space-between; font-size: 11.5px; color: var(--ink-mute); margin-top: 4px; }
+    
+    /* Result card */
+    .result-banner { background: var(--navy-800); color: #fff; border-radius: var(--radius-sm); padding: 24px; text-align: center; margin-bottom: 24px; }
+    .result-banner span { display: block; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--blue-400); margin-bottom: 6px; }
+    .result-banner strong { font-family: var(--font-serif); font-size: 46px; font-weight: 500; line-height: 1; }
+    .result-banner .spread { font-size: 14.5px; font-weight: 600; margin-top: 8px; display: inline-block; padding: 4px 12px; border-radius: 999px; }
+    .spread.up { background: rgba(31, 138, 91, 0.25); color: #4ade80; }
+    .spread.down { background: rgba(239, 68, 68, 0.25); color: #f87171; }
+    
+    .breakdown-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--line); font-size: 14px; }
+    .breakdown-row:last-child { border-bottom: none; }
+    .breakdown-row span { color: var(--ink-soft); }
+    .breakdown-row strong { color: var(--navy-800); }
+    
+    /* Sensitivity table */
+    .matrix-title { font-size: 12.5px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-mute); margin: 24px 0 12px; }
+    .matrix-table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: center; }
+    .matrix-table th, .matrix-table td { padding: 8px 6px; border: 1px solid var(--line); }
+    .matrix-table th { background: var(--tint); color: var(--navy-800); font-weight: 600; font-size: 11.5px; }
+    .matrix-table td.active-cell { background: var(--blue-100); font-weight: 700; color: var(--navy-800); }
+    
+    .btn-reset { background: none; border: 0; color: var(--navy-800); font-size: 13px; font-weight: 600; cursor: pointer; text-decoration: underline; }
+    .btn-reset:hover { color: var(--blue-500); }
+    
+    @media (max-width: 860px) {
+      .tool-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="nav" id="nav">
+    <div class="container nav__inner">
+      <a href="index.html" class="nav__brand">
+        <span class="nav__mark">AG</span>
+        <span class="nav__name">Anish Gupta</span>
+      </a>
+      <nav class="nav__links">
+        <a href="index.html#research">All Projects</a>
+        <a href="titan-report.html">Titan Report</a>
+        <a href="comps-dashboard.html">Comps Dashboard</a>
+        <a href="https://www.linkedin.com/in/anish-gupta-a81478354/" target="_blank" rel="noopener" class="btn btn--small btn--dark">LinkedIn</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="tool-wrap">
+    <a href="index.html#research" class="back-nav">&larr; Back to Research Portfolio</a>
+
+    <p class="eyebrow">Project 03 &middot; Valuation Modeling</p>
+    <h1 class="section__title" style="margin-bottom: 12px;">Interactive DCF Valuation Workbench</h1>
+    <p style="font-size: 18px; color: var(--ink-soft); max-width: 760px; line-height: 1.6;">
+      Adjust fundamental cash flow and risk drivers below to see how intrinsic share value updates in real time. Model baseline calibrated to <strong>Titan Company Ltd (NSE: TITAN)</strong>.
+    </p>
+
+    <div class="tool-grid">
+      <!-- Input Controls -->
+      <section class="panel" aria-label="DCF Model Inputs">
+        <div class="panel-head">
+          <h2>Key Value Drivers</h2>
+          <button id="btn-reset" class="btn-reset">Reset Defaults</button>
+        </div>
+
+        <div class="slider-box">
+          <div class="slider-info">
+            <span>5-Year Revenue CAGR</span>
+            <span class="slider-val" id="disp-growth">15.0%</span>
+          </div>
+          <input type="range" id="rng-growth" min="8" max="24" step="0.5" value="15.0">
+          <div class="slider-hints"><span>8.0% (Bear)</span><span>15.0% (Base)</span><span>24.0% (Bull)</span></div>
+        </div>
+
+        <div class="slider-box">
+          <div class="slider-info">
+            <span>Operating EBIT Margin</span>
+            <span class="slider-val" id="disp-margin">11.0%</span>
+          </div>
+          <input type="range" id="rng-margin" min="8.5" max="14.0" step="0.25" value="11.0">
+          <div class="slider-hints"><span>8.5% (Trough)</span><span>11.0% (Current)</span><span>14.0% (Peak)</span></div>
+        </div>
+
+        <div class="slider-box">
+          <div class="slider-info">
+            <span>Cost of Capital (WACC)</span>
+            <span class="slider-val" id="disp-wacc">11.0%</span>
+          </div>
+          <input type="range" id="rng-wacc" min="9.0" max="14.0" step="0.25" value="11.0">
+          <div class="slider-hints"><span>9.0% (Low Risk)</span><span>11.0% (Base WACC)</span><span>14.0% (High Beta)</span></div>
+        </div>
+
+        <div class="slider-box">
+          <div class="slider-info">
+            <span>Terminal Growth Rate (g)</span>
+            <span class="slider-val" id="disp-tg">5.5%</span>
+          </div>
+          <input type="range" id="rng-tg" min="4.0" max="7.0" step="0.25" value="5.5">
+          <div class="slider-hints"><span>4.0% (Inflation)</span><span>5.5% (India GDP-proxy)</span><span>7.0% (Optimistic)</span></div>
+        </div>
+
+        <div style="background: var(--tint); border-radius: var(--radius-sm); padding: 16px; margin-top: 24px; font-size: 13px; color: var(--ink-soft); line-height: 1.6;">
+          <strong>Baseline Parameters:</strong> FY24 Revenue = ₹51,084 Cr &middot; Tax Rate = 25% &middot; Net Debt = ₹10,650 Cr &middot; Shares = 88.78 Cr &middot; CMP = ₹3,460.
+        </div>
+      </section>
+
+      <!-- Outputs & Sensitivity Table -->
+      <section class="panel" aria-label="Valuation Outputs">
+        <div class="panel-head">
+          <h2>Valuation Output</h2>
+          <span class="pill pill--live"><span class="dot"></span>Dynamic</span>
+        </div>
+
+        <div class="result-banner">
+          <span>Intrinsic Fair Value</span>
+          <strong id="disp-price">₹3,924</strong>
+          <div>
+            <span class="spread up" id="disp-spread">+13.4% Upside</span>
+          </div>
+        </div>
+
+        <div class="breakdown-row">
+          <span>PV of 5-Year Free Cash Flows</span>
+          <strong id="disp-pv-fcf">₹32,450 Cr</strong>
+        </div>
+        <div class="breakdown-row">
+          <span>PV of Terminal Value</span>
+          <strong id="disp-pv-tv">₹3,26,400 Cr</strong>
+        </div>
+        <div class="breakdown-row">
+          <span>Implied Enterprise Value (EV)</span>
+          <strong id="disp-ev">₹3,58,850 Cr</strong>
+        </div>
+        <div class="breakdown-row">
+          <span>Less: Net Debt (incl. gold lease)</span>
+          <strong>-₹10,650 Cr</strong>
+        </div>
+        <div class="breakdown-row" style="padding-top: 14px; font-size: 15.5px;">
+          <span style="font-weight: 600; color: var(--navy-800);">Implied Equity Value</span>
+          <strong style="color: var(--navy-800);" id="disp-eq-val">₹3,48,200 Cr</strong>
+        </div>
+
+        <!-- Sensitivity Matrix -->
+        <div class="matrix-title">Sensitivity Matrix: Target Price (₹) vs WACC &amp; Terminal Growth</div>
+        <div style="overflow-x: auto;">
+          <table class="matrix-table" id="matrix-table">
+            <!-- Rendered by JS -->
+          </table>
+        </div>
+      </section>
+    </div>
+
+    <!-- Educational Methodology Box -->
+    <div style="margin-top: 48px; background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 32px;">
+      <h3 style="font-family: var(--font-serif); font-size: 24px; color: var(--navy-800); margin-bottom: 12px;">Methodology &amp; DCF Mechanics</h3>
+      <p style="font-size: 15.5px; color: var(--ink-soft); line-height: 1.7; margin-bottom: 16px;">
+        This tool uses a standard <strong>Free Cash Flow to Firm (FCFF)</strong> framework. Over the 5-year explicit forecast horizon, revenues are projected based on the compound growth assumption, EBIT margins determine operating profitability, and Net Operating Profit After Tax (NOPAT) is adjusted for reinvestment into capital expenditures and gold working capital.
+      </p>
+      <p style="font-size: 15.5px; color: var(--ink-soft); line-height: 1.7; margin: 0;">
+        The terminal value utilizes the Gordon Growth formula, discounted back to present value using WACC. Deducting net debt (which includes bank gold-on-lease liabilities) yields equity value, which divided by diluted shares yields intrinsic value per share.
+      </p>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer__inner">
+      <span>&copy; 2026 Anish Gupta &middot; Christ University</span>
+      <span class="footer__note">Academic research tool &middot; Not investment advice.</span>
+    </div>
+  </footer>
+
+  <script>
+    const CONST = {
+      REV: 51084,
+      TAX: 0.25,
+      REINVEST: 0.28,
+      NET_DEBT: 10650,
+      SHARES: 88.78,
+      CMP: 3460
+    };
+
+    const rngG = document.getElementById('rng-growth');
+    const rngM = document.getElementById('rng-margin');
+    const rngW = document.getElementById('rng-wacc');
+    const rngT = document.getElementById('rng-tg');
+    const btnReset = document.getElementById('btn-reset');
+
+    const dispG = document.getElementById('disp-growth');
+    const dispM = document.getElementById('disp-margin');
+    const dispW = document.getElementById('disp-wacc');
+    const dispT = document.getElementById('disp-tg');
+
+    const dispPrice = document.getElementById('disp-price');
+    const dispSpread = document.getElementById('disp-spread');
+    const dispPvFcf = document.getElementById('disp-pv-fcf');
+    const dispPvTv = document.getElementById('disp-pv-tv');
+    const dispEv = document.getElementById('disp-ev');
+    const dispEqVal = document.getElementById('disp-eq-val');
+    const matrixTable = document.getElementById('matrix-table');
+
+    function calcDCF(g, m, wacc, tg) {
+      const spread = Math.max(0.0075, wacc - tg);
+      let pvFcfSum = 0;
+      let lastFcf = 0;
+
+      for (let t = 1; t <= 5; t++) {
+        const rev = CONST.REV * Math.pow(1 + g, t);
+        const ebit = rev * m;
+        const nopat = ebit * (1 - CONST.TAX);
+        const fcf = nopat * (1 - CONST.REINVEST);
+        pvFcfSum += (fcf / Math.pow(1 + wacc, t));
+        if (t === 5) lastFcf = fcf;
+      }
+
+      const tv = (lastFcf * (1 + tg)) / spread;
+      const pvTv = tv / Math.pow(1 + wacc, 5);
+      const ev = pvFcfSum + pvTv;
+      const eq = ev - CONST.NET_DEBT;
+      const price = Math.max(0, eq / CONST.SHARES);
+
+      return { pvFcfSum, pvTv, ev, eq, price };
+    }
+
+    function formatCr(val) {
+      return '₹' + Math.round(val).toLocaleString('en-IN') + ' Cr';
+    }
+
+    function renderMatrix(g, m, curW, curT) {
+      const waccSteps = [-0.01, -0.005, 0, 0.005, 0.01];
+      const tgSteps = [-0.01, -0.005, 0, 0.005, 0.01];
+
+      let html = '<thead><tr><th>WACC \\ g</th>';
+      tgSteps.forEach(o => {
+        html += `<th>${((curT + o) * 100).toFixed(1)}%</th>`;
+      });
+      html += '</tr></thead><tbody>';
+
+      waccSteps.forEach(wo => {
+        const w = curW + wo;
+        html += `<tr><th>${(w * 100).toFixed(1)}%</th>`;
+        tgSteps.forEach(to => {
+          const t = curT + to;
+          const res = calcDCF(g, m, w, t);
+          const isCur = (wo === 0 && to === 0);
+          html += `<td class="${isCur ? 'active-cell' : ''}">₹${Math.round(res.price).toLocaleString('en-IN')}</td>`;
+        });
+        html += '</tr>';
+      });
+
+      html += '</tbody>';
+      matrixTable.innerHTML = html;
+    }
+
+    function update() {
+      const g = parseFloat(rngG.value) / 100;
+      const m = parseFloat(rngM.value) / 100;
+      const w = parseFloat(rngW.value) / 100;
+      const t = parseFloat(rngT.value) / 100;
+
+      dispG.textContent = (g * 100).toFixed(1) + '%';
+      dispM.textContent = (m * 100).toFixed(2) + '%';
+      dispW.textContent = (w * 100).toFixed(2) + '%';
+      dispT.textContent = (t * 100).toFixed(2) + '%';
+
+      const res = calcDCF(g, m, w, t);
+      const p = Math.round(res.price);
+
+      dispPrice.textContent = '₹' + p.toLocaleString('en-IN');
+      dispPvFcf.textContent = formatCr(res.pvFcfSum);
+      dispPvTv.textContent = formatCr(res.pvTv);
+      dispEv.textContent = formatCr(res.ev);
+      dispEqVal.textContent = formatCr(res.eq);
+
+      const spread = ((p - CONST.CMP) / CONST.CMP) * 100;
+      if (spread >= 0) {
+        dispSpread.textContent = `+${spread.toFixed(1)}% Upside vs CMP (₹3,460)`;
+        dispSpread.className = 'spread up';
+      } else {
+        dispSpread.textContent = `${spread.toFixed(1)}% Downside vs CMP (₹3,460)`;
+        dispSpread.className = 'spread down';
+      }
+
+      renderMatrix(g, m, w, t);
+    }
+
+    [rngG, rngM, rngW, rngT].forEach(el => el.addEventListener('input', update));
+
+    btnReset.addEventListener('click', () => {
+      rngG.value = 15.0;
+      rngM.value = 11.0;
+      rngW.value = 11.0;
+      rngT.value = 5.5;
+      update();
+    });
+
+    update();
+  </script>
+</body>
+</html>

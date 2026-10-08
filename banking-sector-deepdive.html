@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Indian Banking Sector Deep Dive | Anish Gupta</title>
+  <meta name="description" content="Equity research industry deep dive on Indian private & public sector banks: NIM cycles, deposit competition, and Du Pont RoA analysis by Anish Gupta.">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .deepdive-wrap { width: min(100% - 48px, 980px); margin-inline: auto; padding: 48px 0 100px; }
+    .back-nav { display: inline-flex; align-items: center; gap: 8px; font-size: 14.5px; font-weight: 600; color: var(--navy-800); margin-bottom: 32px; text-decoration: none; border-bottom: 1px solid var(--blue-500); padding-bottom: 2px; }
+    .back-nav:hover { color: var(--blue-500); }
+
+    .header-box { border-bottom: 2px solid var(--navy-800); padding-bottom: 24px; margin-bottom: 36px; }
+    .report-title { font-family: var(--font-serif); font-size: clamp(34px, 4.5vw, 48px); font-weight: 500; color: var(--navy-800); line-height: 1.15; margin-bottom: 12px; }
+    .report-subtitle { font-size: 18px; color: var(--ink-soft); line-height: 1.55; max-width: 780px; }
+    
+    .theme-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin: 32px 0 40px; }
+    .theme-card { background: #fff; border: 1px solid var(--line); border-top: 3px solid var(--navy-800); border-radius: var(--radius-sm); padding: 24px; box-shadow: var(--shadow-sm); }
+    .theme-card h3 { font-family: var(--font-serif); font-size: 21px; color: var(--navy-800); margin-bottom: 10px; }
+    .theme-card p { font-size: 14.5px; color: var(--ink-soft); line-height: 1.65; margin: 0; }
+
+    .table-box { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); overflow-x: auto; box-shadow: var(--shadow-sm); margin: 32px 0; }
+    .dupont-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    .dupont-table th, .dupont-table td { padding: 14px 16px; text-align: right; border-bottom: 1px solid var(--line); white-space: nowrap; }
+    .dupont-table th:first-child, .dupont-table td:first-child { text-align: left; }
+    .dupont-table th { background: var(--tint); color: var(--navy-800); font-size: 11.5px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
+    .dupont-table tr:hover td { background: #FAFCFE; }
+    .dupont-table tr.lead-row td { background: #F1F6FB; font-weight: 600; }
+
+    .prose-section { margin-top: 40px; }
+    .prose-section h2 { font-family: var(--font-serif); font-size: 28px; font-weight: 500; color: var(--navy-800); margin: 36px 0 16px; border-bottom: 1px solid var(--line); padding-bottom: 8px; }
+    .prose-section p { font-size: 16.5px; color: var(--ink-soft); line-height: 1.75; margin-bottom: 20px; }
+    .prose-section strong { color: var(--navy-800); }
+  </style>
+</head>
+<body>
+
+  <header class="nav" id="nav">
+    <div class="container nav__inner">
+      <a href="index.html" class="nav__brand">
+        <span class="nav__mark">AG</span>
+        <span class="nav__name">Anish Gupta</span>
+      </a>
+      <nav class="nav__links">
+        <a href="index.html#research">All Projects</a>
+        <a href="titan-report.html">Titan Report</a>
+        <a href="dcf-tool.html">DCF Tool</a>
+        <a href="comps-dashboard.html">Comps Dashboard</a>
+        <a href="ma-lbo-model.html">M&amp;A / LBO</a>
+        <a href="https://www.linkedin.com/in/anish-gupta-a81478354/" target="_blank" rel="noopener" class="btn btn--small btn--dark">LinkedIn</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="deepdive-wrap">
+    <a href="index.html#research" class="back-nav">&larr; Back to Research Portfolio</a>
+
+    <header class="header-box">
+      <div style="margin-bottom: 14px;">
+        <span class="pill pill--live">Sector Research Note</span>
+        <span class="muted" style="margin-left: 10px; font-size: 13.5px;">Banking &amp; Financial Services &middot; Dalal Street</span>
+      </div>
+      <h1 class="report-title">Indian Banking Sector Deep Dive: Deposit Competition, NIM Normalization &amp; RoA Decomposition</h1>
+      <p class="report-subtitle">
+        Analyzing balance sheet health, Credit-to-Deposit (C/D) friction, and Du Pont Return-on-Assets decomposition across India's top private and public lenders.
+      </p>
+    </header>
+
+    <!-- Structural Themes -->
+    <div class="theme-grid">
+      <div class="theme-card">
+        <h3>1. The Deposit Growth Squeeze</h3>
+        <p>
+          While systemic loan growth has compounded at ~14-16%, deposit mobilization has lagged at ~11-12%. As household savings increasingly shift toward equity mutual funds and SIPs, banks face higher costs of term deposits to fund asset expansion.
+        </p>
+      </div>
+
+      <div class="theme-card">
+        <h3>2. Post-HDFC Merger Rebalancing</h3>
+        <p>
+          The mega-merger of HDFC Ltd into HDFC Bank introduced elevated C/D ratio pressure (~104% peak). HDFC Bank is intentionally moderating credit growth below systemic levels to replace high-cost wholesale borrowings with granular retail deposits.
+        </p>
+      </div>
+
+      <div class="theme-card">
+        <h3>3. Multi-Decade Clean Asset Quality</h3>
+        <p>
+          Net NPAs across leading private lenders (ICICI, HDFC, Axis, Kotak) remain below 0.5%, with credit costs running at cyclical troughs (~40-60 bps). Robust corporate balance sheet health and disciplined underwriting have preserved profitability.
+        </p>
+      </div>
+    </div>
+
+    <!-- Comparative Du Pont Table -->
+    <h2 style="font-family: var(--font-serif); font-size: 26px; color: var(--navy-800); margin-bottom: 12px;">Indian Banking Du Pont RoA &amp; Valuation Tree (FY24)</h2>
+    <p style="font-size: 15px; color: var(--ink-soft); margin-bottom: 20px;">
+      Deconstructing Return on Assets (RoA) and Return on Equity (RoE) across major Indian lenders to determine franchise earnings power:
+    </p>
+
+    <div class="table-box">
+      <table class="dupont-table">
+        <thead>
+          <tr>
+            <th>Bank</th>
+            <th>NIM (%)</th>
+            <th>Fee / Other Inc (%)</th>
+            <th>Cost to Assets (%)</th>
+            <th>Credit Cost (%)</th>
+            <th>RoA (%)</th>
+            <th>Leverage (x)</th>
+            <th>RoE (%)</th>
+            <th>P / ABV (x)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="lead-row">
+            <td><strong>ICICI Bank</strong></td>
+            <td>4.53%</td>
+            <td>1.68%</td>
+            <td>2.22%</td>
+            <td>0.38%</td>
+            <td>2.35%</td>
+            <td>8.2x</td>
+            <td>18.9%</td>
+            <td>3.15x</td>
+          </tr>
+          <tr>
+            <td><strong>HDFC Bank</strong></td>
+            <td>3.62%</td>
+            <td>1.45%</td>
+            <td>1.98%</td>
+            <td>0.45%</td>
+            <td>1.95%</td>
+            <td>8.5x</td>
+            <td>16.5%</td>
+            <td>2.60x</td>
+          </tr>
+          <tr>
+            <td><strong>Kotak Mahindra Bank</strong></td>
+            <td>5.25%</td>
+            <td>2.10%</td>
+            <td>3.15%</td>
+            <td>0.42%</td>
+            <td>2.45%</td>
+            <td>6.1x</td>
+            <td>14.8%</td>
+            <td>2.90x</td>
+          </tr>
+          <tr>
+            <td><strong>Axis Bank</strong></td>
+            <td>4.05%</td>
+            <td>1.75%</td>
+            <td>2.45%</td>
+            <td>0.52%</td>
+            <td>1.78%</td>
+            <td>9.0x</td>
+            <td>16.2%</td>
+            <td>2.10x</td>
+          </tr>
+          <tr>
+            <td><strong>State Bank of India (SBI)</strong></td>
+            <td>3.28%</td>
+            <td>0.88%</td>
+            <td>1.92%</td>
+            <td>0.35%</td>
+            <td>1.04%</td>
+            <td>15.2x</td>
+            <td>16.8%</td>
+            <td>1.45x</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Analytical Prose -->
+    <div class="prose-section">
+      <h2>Equity Research Analytical Takeaways</h2>
+      <p>
+        <strong>1. ICICI Bank's Operational Dominance:</strong> ICICI Bank has established best-in-class risk-adjusted profitability, achieving an industry-leading <strong>2.35% RoA</strong> supported by superior digital cross-selling, low branch operating overhead, and disciplined provisioning. Its core operating profit growth provides the highest valuation safety cushion among peers.
+      </p>
+      <p>
+        <strong>2. HDFC Bank's Valuation Rerating Catalyst:</strong> HDFC Bank currently trades at a historical discount to its 10-year mean P/ABV (~2.6x vs ~3.8x peak). The key catalyst for valuation rerating will be sequential reduction in its Credit-to-Deposit ratio below 88% and sustained granular retail deposit accretion without margin erosion.
+      </p>
+      <p>
+        <strong>3. PSU Bank Convergence (SBI):</strong> SBI achieves a competitive RoE of ~16.8% primarily through financial leverage (~15.2x assets-to-equity) rather than high RoA (1.04%). While its asset quality has substantially hardened, public sector wage revisions and lower fee income generation keep its RoA structurally lower than tier-1 private peers.
+      </p>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer__inner">
+      <span>&copy; 2026 Anish Gupta &middot; Christ University</span>
+      <span class="footer__note">Sector research analysis &middot; Not investment advice.</span>
+    </div>
+  </footer>
+
+</body>
+</html>

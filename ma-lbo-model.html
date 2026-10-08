@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>M&amp;A Accretion / Dilution &amp; LBO Model | Anish Gupta</title>
+  <meta name="description" content="Interactive Investment Banking M&A Accretion / Dilution and LBO returns model by Anish Gupta.">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .ma-wrap { width: min(100% - 48px, 1120px); margin-inline: auto; padding: 48px 0 100px; }
+    .back-nav { display: inline-flex; align-items: center; gap: 8px; font-size: 14.5px; font-weight: 600; color: var(--navy-800); margin-bottom: 32px; text-decoration: none; border-bottom: 1px solid var(--blue-500); padding-bottom: 2px; }
+    .back-nav:hover { color: var(--blue-500); }
+
+    .tabs { display: flex; gap: 12px; margin: 28px 0 36px; border-bottom: 1px solid var(--line); padding-bottom: 12px; }
+    .tab-btn { background: none; border: none; font-size: 16px; font-weight: 600; color: var(--ink-mute); cursor: pointer; padding: 8px 16px; border-radius: var(--radius-sm); transition: all 0.2s; }
+    .tab-btn.active { background: var(--navy-800); color: #fff; }
+
+    .grid-2 { display: grid; grid-template-columns: 1fr 1.15fr; gap: 40px; }
+    .panel { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 32px; box-shadow: var(--shadow-sm); }
+    .panel-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding-bottom: 14px; border-bottom: 1px solid var(--line); }
+    .panel-head h2 { font-family: var(--font-serif); font-size: 22px; font-weight: 500; color: var(--navy-800); margin: 0; }
+    
+    .input-row { margin-bottom: 20px; }
+    .input-label { display: flex; justify-content: space-between; align-items: baseline; font-size: 14px; font-weight: 600; color: var(--navy-800); margin-bottom: 8px; }
+    .input-val { font-size: 15px; font-weight: 700; color: var(--navy-700); background: var(--blue-100); padding: 2px 8px; border-radius: 4px; }
+    
+    input[type=range] { width: 100%; height: 6px; background: var(--tint); border: 1px solid var(--line); border-radius: 999px; outline: none; -webkit-appearance: none; }
+    input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%; background: var(--navy-800); cursor: pointer; border: 2px solid #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
+    
+    .kpi-banner { background: var(--navy-800); color: #fff; border-radius: var(--radius-sm); padding: 24px; text-align: center; margin-bottom: 24px; }
+    .kpi-banner span { display: block; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--blue-400); margin-bottom: 6px; }
+    .kpi-banner strong { font-family: var(--font-serif); font-size: 46px; font-weight: 500; line-height: 1; }
+    .kpi-badge { font-size: 14px; font-weight: 700; margin-top: 10px; display: inline-block; padding: 4px 12px; border-radius: 999px; }
+    .kpi-badge.accretive { background: rgba(31, 138, 91, 0.25); color: #4ade80; }
+    .kpi-badge.dilutive { background: rgba(239, 68, 68, 0.25); color: #f87171; }
+    
+    .data-line { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--line); font-size: 14px; }
+    .data-line:last-child { border-bottom: none; }
+    .data-line span { color: var(--ink-soft); }
+    .data-line strong { color: var(--navy-800); }
+    
+    .explainer { margin-top: 48px; background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 32px; }
+    .explainer h3 { font-family: var(--font-serif); font-size: 24px; color: var(--navy-800); margin-bottom: 12px; }
+    .explainer p { font-size: 15.5px; color: var(--ink-soft); line-height: 1.7; margin-bottom: 16px; }
+
+    @media (max-width: 860px) {
+      .grid-2 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="nav" id="nav">
+    <div class="container nav__inner">
+      <a href="index.html" class="nav__brand">
+        <span class="nav__mark">AG</span>
+        <span class="nav__name">Anish Gupta</span>
+      </a>
+      <nav class="nav__links">
+        <a href="index.html#research">All Projects</a>
+        <a href="titan-report.html">Titan Report</a>
+        <a href="dcf-tool.html">DCF Tool</a>
+        <a href="comps-dashboard.html">Comps Dashboard</a>
+        <a href="https://www.linkedin.com/in/anish-gupta-a81478354/" target="_blank" rel="noopener" class="btn btn--small btn--dark">LinkedIn</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="ma-wrap">
+    <a href="index.html#research" class="back-nav">&larr; Back to Research Portfolio</a>
+
+    <p class="eyebrow">Project 05 &middot; Investment Banking Deal Modeling</p>
+    <h1 class="section__title" style="margin-bottom: 12px;">M&amp;A Accretion / Dilution &amp; LBO Deal Workbench</h1>
+    <p style="font-size: 18px; color: var(--ink-soft); max-width: 780px; line-height: 1.6;">
+      Interactive transaction modeling engine evaluating deal financing structures (Cash vs. Stock), acquisition premiums, synergy sensitivities, and Private Equity sponsor buyout returns (IRR &amp; MoIC).
+    </p>
+
+    <!-- Navigation Tabs -->
+    <div class="tabs">
+      <button class="tab-btn active" id="tab-ma-btn">1. M&amp;A Accretion / Dilution</button>
+      <button class="tab-btn" id="tab-lbo-btn">2. LBO Returns Screener</button>
+    </div>
+
+    <!-- MODULE 1: M&A ACCRETION / DILUTION -->
+    <div id="module-ma">
+      <div class="grid-2">
+        <section class="panel" aria-label="Deal Assumptions">
+          <div class="panel-head">
+            <h2>Transaction Inputs</h2>
+            <span class="muted" style="font-size: 12.5px;">Simulated Indian Strategic M&amp;A</span>
+          </div>
+
+          <div class="input-row">
+            <div class="input-label">
+              <span>Offer Premium to Target</span>
+              <span class="input-val" id="disp-prem">20.0%</span>
+            </div>
+            <input type="range" id="rng-prem" min="0" max="50" step="2.5" value="20">
+          </div>
+
+          <div class="input-row">
+            <div class="input-label">
+              <span>Financing: % Stock Issued</span>
+              <span class="input-val" id="disp-stock-mix">40.0%</span>
+            </div>
+            <input type="range" id="rng-stock-mix" min="0" max="100" step="5" value="40">
+            <div style="font-size: 12px; color: var(--ink-mute); margin-top: 4px;">Remaining 60.0% funded via new debt at 8.5% interest</div>
+          </div>
+
+          <div class="input-row">
+            <div class="input-label">
+              <span>Pre-Tax Cost Synergies (₹ Cr)</span>
+              <span class="input-val" id="disp-syn">₹150 Cr</span>
+            </div>
+            <input type="range" id="rng-syn" min="0" max="500" step="25" value="150">
+          </div>
+
+          <div style="background: var(--tint); border-radius: var(--radius-sm); padding: 16px; margin-top: 24px; font-size: 13px; color: var(--ink-soft); line-height: 1.6;">
+            <strong>Baseline Assumptions:</strong><br>
+            &bull; Acquirer (Buyer): Share Price = ₹1,200 &middot; Net Income = ₹3,000 Cr &middot; Shares = 25 Cr (Standalone EPS = ₹120.00)<br>
+            &bull; Target: Share Price = ₹400 &middot; Net Income = ₹600 Cr &middot; Shares = 10 Cr (Standalone Equity Value = ₹4,000 Cr)
+          </div>
+        </section>
+
+        <!-- M&A Output -->
+        <section class="panel" aria-label="Deal Output">
+          <div class="panel-head">
+            <h2>Pro-Forma Impact</h2>
+            <span class="pill pill--live"><span class="dot"></span>Live Deal Math</span>
+          </div>
+
+          <div class="kpi-banner">
+            <span>Pro-Forma EPS</span>
+            <strong id="disp-pf-eps">₹124.60</strong>
+            <div>
+              <span class="kpi-badge accretive" id="disp-accretion-badge">+3.83% Accretive</span>
+            </div>
+          </div>
+
+          <div class="data-line">
+            <span>Offer Price per Target Share</span>
+            <strong id="disp-offer-px">₹480.00</strong>
+          </div>
+          <div class="data-line">
+            <span>Total Purchase Equity Consideration</span>
+            <strong id="disp-deal-val">₹4,800 Cr</strong>
+          </div>
+          <div class="data-line">
+            <span>New Debt Issued (Financing Cost)</span>
+            <strong id="disp-new-debt">₹2,880 Cr (Interest: ₹244.8 Cr)</strong>
+          </div>
+          <div class="data-line">
+            <span>New Acquirer Shares Issued</span>
+            <strong id="disp-new-shares">1.60 Cr shares</strong>
+          </div>
+          <div class="data-line">
+            <span>Pro-Forma Combined Net Income</span>
+            <strong id="disp-pf-ni">₹3,314.4 Cr</strong>
+          </div>
+          <div class="data-line" style="padding-top: 14px; font-size: 15px;">
+            <span style="font-weight: 600; color: var(--navy-800);">Standalone vs Pro-Forma EPS</span>
+            <strong style="color: var(--navy-800);">₹120.00 &rarr; <span id="disp-pf-eps-sub" style="color: var(--green);">₹124.60</span></strong>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- MODULE 2: LBO RETURNS SCREENER (Hidden by default, shown via tab) -->
+    <div id="module-lbo" style="display: none;">
+      <div class="grid-2">
+        <section class="panel" aria-label="LBO Assumptions">
+          <div class="panel-head">
+            <h2>Buyout Assumptions</h2>
+            <span class="muted" style="font-size: 12.5px;">Sponsor 5-Year LBO</span>
+          </div>
+
+          <div class="input-row">
+            <div class="input-label">
+              <span>Entry EV / EBITDA Multiple</span>
+              <span class="input-val" id="disp-entry-mult">12.0x</span>
+            </div>
+            <input type="range" id="rng-entry-mult" min="8" max="20" step="0.5" value="12.0">
+          </div>
+
+          <div class="input-row">
+            <div class="input-label">
+              <span>Exit EV / EBITDA Multiple</span>
+              <span class="input-val" id="disp-exit-mult">12.0x</span>
+            </div>
+            <input type="range" id="rng-exit-mult" min="8" max="20" step="0.5" value="12.0">
+          </div>
+
+          <div class="input-row">
+            <div class="input-label">
+              <span>Leverage (% Debt Funded at Entry)</span>
+              <span class="input-val" id="disp-lbo-debt">55.0%</span>
+            </div>
+            <input type="range" id="rng-lbo-debt" min="30" max="75" step="5" value="55">
+          </div>
+
+          <div class="input-row">
+            <div class="input-label">
+              <span>Target 5-Year EBITDA CAGR</span>
+              <span class="input-val" id="disp-ebitda-grow">14.0%</span>
+            </div>
+            <input type="range" id="rng-ebitda-grow" min="6" max="24" step="1" value="14">
+          </div>
+
+          <div style="background: var(--tint); border-radius: var(--radius-sm); padding: 16px; margin-top: 24px; font-size: 13px; color: var(--ink-soft); line-height: 1.6;">
+            <strong>Target Profile:</strong> Base EBITDA = ₹500 Cr &middot; 5-Year Holding Period &middot; 60% of Cumulative FCF used for debt paydown.
+          </div>
+        </section>
+
+        <section class="panel" aria-label="LBO Outputs">
+          <div class="panel-head">
+            <h2>Sponsor Returns (5-Year Horizon)</h2>
+            <span class="pill pill--live"><span class="dot"></span>PE Returns</span>
+          </div>
+
+          <div class="kpi-banner">
+            <span>Projected Sponsor IRR</span>
+            <strong id="disp-irr">24.2%</strong>
+            <div>
+              <span class="kpi-badge accretive" id="disp-moic">2.96x MoIC (Money on Invested Capital)</span>
+            </div>
+          </div>
+
+          <div class="data-line">
+            <span>Initial Enterprise Value (Entry)</span>
+            <strong id="disp-entry-ev">₹6,000 Cr</strong>
+          </div>
+          <div class="data-line">
+            <span>Sponsor Equity Check at Entry</span>
+            <strong id="disp-sponsor-equity">₹2,700 Cr</strong>
+          </div>
+          <div class="data-line">
+            <span>Year 5 Exit EBITDA</span>
+            <strong id="disp-exit-ebitda">₹962.7 Cr</strong>
+          </div>
+          <div class="data-line">
+            <span>Exit Enterprise Value</span>
+            <strong id="disp-exit-ev">₹11,552 Cr</strong>
+          </div>
+          <div class="data-line">
+            <span>Remaining Net Debt at Exit</span>
+            <strong id="disp-exit-debt">₹1,560 Cr (De-levered)</strong>
+          </div>
+          <div class="data-line" style="padding-top: 14px; font-size: 15px;">
+            <span style="font-weight: 600; color: var(--navy-800);">Exit Equity Proceeds to Sponsor</span>
+            <strong style="color: var(--navy-800);" id="disp-exit-equity">₹9,992 Cr</strong>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- Educational Mechanics -->
+    <div class="explainer">
+      <h3>Investment Banking Modeling Principles</h3>
+      <p>
+        <strong>Accretion / Dilution Mechanics:</strong> A transaction is EPS accretive if the pro-forma earnings per share exceeds the standalone acquirer EPS. In an all-stock deal, a transaction is accretive whenever the acquirer's P/E multiple is higher than the effective acquisition P/E of the target. When funded via cash/debt, the hurdle is whether the after-tax cost of debt is lower than the target's earnings yield.
+      </p>
+      <p style="margin: 0;">
+        <strong>LBO Return Value Drivers:</strong> Private Equity buyouts generate returns across three distinct levers: (1) <em>Deleveraging</em> (using company free cash flows to pay down acquisition debt, transferring enterprise value to equity value), (2) <em>Operational Growth</em> (EBITDA expansion), and (3) <em>Multiple Expansion</em> (exiting at an EV/EBITDA multiple higher than entry).
+      </p>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer__inner">
+      <span>&copy; 2026 Anish Gupta &middot; Christ University</span>
+      <span class="footer__note">Academic investment banking deal model &middot; Not financial advice.</span>
+    </div>
+  </footer>
+
+  <script>
+    // Tab switching
+    const tabMaBtn = document.getElementById('tab-ma-btn');
+    const tabLboBtn = document.getElementById('tab-lbo-btn');
+    const modMa = document.getElementById('module-ma');
+    const modLbo = document.getElementById('module-lbo');
+
+    tabMaBtn.addEventListener('click', () => {
+      tabMaBtn.classList.add('active');
+      tabLboBtn.classList.remove('active');
+      modMa.style.display = 'block';
+      modLbo.style.display = 'none';
+    });
+
+    tabLboBtn.addEventListener('click', () => {
+      tabLboBtn.classList.add('active');
+      tabMaBtn.classList.remove('active');
+      modMa.style.display = 'none';
+      modLbo.style.display = 'block';
+    });
+
+    // M&A Math
+    const rngPrem = document.getElementById('rng-prem');
+    const rngStock = document.getElementById('rng-stock-mix');
+    const rngSyn = document.getElementById('rng-syn');
+
+    const dispPrem = document.getElementById('disp-prem');
+    const dispStock = document.getElementById('disp-stock-mix');
+    const dispSyn = document.getElementById('disp-syn');
+
+    const dispPfEps = document.getElementById('disp-pf-eps');
+    const dispPfEpsSub = document.getElementById('disp-pf-eps-sub');
+    const dispBadge = document.getElementById('disp-accretion-badge');
+    const dispOfferPx = document.getElementById('disp-offer-px');
+    const dispDealVal = document.getElementById('disp-deal-val');
+    const dispNewDebt = document.getElementById('disp-new-debt');
+    const dispNewShares = document.getElementById('disp-new-shares');
+    const dispPfNi = document.getElementById('disp-pf-ni');
+
+    function updateMA() {
+      const prem = parseFloat(rngPrem.value) / 100;
+      const stockMix = parseFloat(rngStock.value) / 100;
+      const syn = parseFloat(rngSyn.value);
+
+      dispPrem.textContent = (prem * 100).toFixed(1) + '%';
+      dispStock.textContent = (stockMix * 100).toFixed(1) + '%';
+      dispSyn.textContent = '₹' + syn.toFixed(0) + ' Cr';
+
+      // Constants
+      const acqPx = 1200;
+      const acqNi = 3000;
+      const acqShares = 25;
+      const tgtPx = 400;
+      const tgtNi = 600;
+      const tgtShares = 10;
+      const debtRate = 0.085;
+      const taxRate = 0.25;
+
+      const offerPx = tgtPx * (1 + prem);
+      const dealVal = offerPx * tgtShares;
+
+      const stockVal = dealVal * stockMix;
+      const debtVal = dealVal * (1 - stockMix);
+
+      const newShares = stockVal / acqPx;
+      const interestCostPreTax = debtVal * debtRate;
+      const interestCostPostTax = interestCostPreTax * (1 - taxRate);
+      const synPostTax = syn * (1 - taxRate);
+
+      const pfNetIncome = acqNi + tgtNi + synPostTax - interestCostPostTax;
+      const pfShares = acqShares + newShares;
+      const pfEps = pfNetIncome / pfShares;
+      const baseEps = acqNi / acqShares;
+      const spread = ((pfEps - baseEps) / baseEps) * 100;
+
+      dispOfferPx.textContent = '₹' + offerPx.toFixed(2);
+      dispDealVal.textContent = '₹' + Math.round(dealVal).toLocaleString('en-IN') + ' Cr';
+      dispNewDebt.textContent = '₹' + Math.round(debtVal).toLocaleString('en-IN') + ' Cr (Int: ₹' + interestCostPreTax.toFixed(1) + ' Cr)';
+      dispNewShares.textContent = newShares.toFixed(2) + ' Cr shares';
+      dispPfNi.textContent = '₹' + pfNetIncome.toFixed(1) + ' Cr';
+      dispPfEps.textContent = '₹' + pfEps.toFixed(2);
+      dispPfEpsSub.textContent = '₹' + pfEps.toFixed(2);
+
+      if (spread >= 0) {
+        dispBadge.className = 'kpi-badge accretive';
+        dispBadge.textContent = `+${spread.toFixed(2)}% Accretive`;
+        dispPfEpsSub.style.color = 'var(--green)';
+      } else {
+        dispBadge.className = 'kpi-badge dilutive';
+        dispBadge.textContent = `${spread.toFixed(2)}% Dilutive`;
+        dispPfEpsSub.style.color = '#ef4444';
+      }
+    }
+
+    [rngPrem, rngStock, rngSyn].forEach(el => el.addEventListener('input', updateMA));
+    updateMA();
+
+    // LBO Math
+    const rngEntry = document.getElementById('rng-entry-mult');
+    const rngExit = document.getElementById('rng-exit-mult');
+    const rngLboDebt = document.getElementById('rng-lbo-debt');
+    const rngEbitdaG = document.getElementById('rng-ebitda-grow');
+
+    const dispEntryMult = document.getElementById('disp-entry-mult');
+    const dispExitMult = document.getElementById('disp-exit-mult');
+    const dispLboDebt = document.getElementById('disp-lbo-debt');
+    const dispEbitdaG = document.getElementById('disp-ebitda-grow');
+
+    const dispIrr = document.getElementById('disp-irr');
+    const dispMoic = document.getElementById('disp-moic');
+    const dispEntryEv = document.getElementById('disp-entry-ev');
+    const dispSponsorEq = document.getElementById('disp-sponsor-equity');
+    const dispExitEbitda = document.getElementById('disp-exit-ebitda');
+    const dispExitEv = document.getElementById('disp-exit-ev');
+    const dispExitDebt = document.getElementById('disp-exit-debt');
+    const dispExitEq = document.getElementById('disp-exit-equity');
+
+    function updateLBO() {
+      const entryM = parseFloat(rngEntry.value);
+      const exitM = parseFloat(rngExit.value);
+      const debtPct = parseFloat(rngLboDebt.value) / 100;
+      const g = parseFloat(rngEbitdaG.value) / 100;
+
+      dispEntryMult.textContent = entryM.toFixed(1) + 'x';
+      dispExitMult.textContent = exitM.toFixed(1) + 'x';
+      dispLboDebt.textContent = (debtPct * 100).toFixed(0) + '%';
+      dispEbitdaG.textContent = (g * 100).toFixed(0) + '%';
+
+      const baseEbitda = 500;
+      const entryEv = baseEbitda * entryM;
+      const entryDebt = entryEv * debtPct;
+      const sponsorEquity = entryEv - entryDebt;
+
+      const exitEbitda = baseEbitda * Math.pow(1 + g, 5);
+      const exitEv = exitEbitda * exitM;
+
+      // Cumulative FCF generated over 5 years
+      const cumFcf = baseEbitda * 2.8; 
+      const debtPaid = cumFcf * 0.6;
+      const exitDebt = Math.max(0, entryDebt - debtPaid);
+
+      const exitEquity = exitEv - exitDebt;
+      const moic = Math.max(0, exitEquity / sponsorEquity);
+      const irr = (Math.pow(moic, 1 / 5) - 1) * 100;
+
+      dispEntryEv.textContent = '₹' + Math.round(entryEv).toLocaleString('en-IN') + ' Cr';
+      dispSponsorEq.textContent = '₹' + Math.round(sponsorEquity).toLocaleString('en-IN') + ' Cr';
+      dispExitEbitda.textContent = '₹' + exitEbitda.toFixed(1) + ' Cr';
+      dispExitEv.textContent = '₹' + Math.round(exitEv).toLocaleString('en-IN') + ' Cr';
+      dispExitDebt.textContent = '₹' + Math.round(exitDebt).toLocaleString('en-IN') + ' Cr (De-levered)';
+      dispExitEq.textContent = '₹' + Math.round(exitEquity).toLocaleString('en-IN') + ' Cr';
+
+      dispIrr.textContent = irr.toFixed(1) + '%';
+      dispMoic.textContent = moic.toFixed(2) + 'x MoIC (Money on Invested Capital)';
+    }
+
+    [rngEntry, rngExit, rngLboDebt, rngEbitdaG].forEach(el => el.addEventListener('input', updateLBO));
+    updateLBO();
+  </script>
+</body>
+</html>
